@@ -166,82 +166,88 @@ class waveFunction:
     def collapsing(self):
         collapse_param = 0
         collapse_cond = self.size[0]*self.size[1]
+        collapsed = 0
         for i in range(self.size[0]):
             for j in range(self.size[1]):
-                if type(self.scene[j][i]) == str:
-                    collapse_param += 1
+                if len(self.scene[j][i]) == 1:
+                     collapsed += 1
+                collapse_param += len(self.scene[j][i])
         if collapse_param == collapse_cond:
             return False
         else:
-            # print(collapse_param)
-            # print(self.scene)
+            print(collapsed)
             return True
 
     def iterate(self):
-        # print('working')
         coords = self.min_entropy_coords()
         self.collapse(coords)
         self.consequence(coords)
-        # print(self.scene)
 
     def min_entropy_coords(self):
         min_entropy = len(self.possibilities())
         min_entropy_coords = []
         for i in range(self.size[1]):
             for j in range(self.size[0]):
-                if not type(self.scene[i][j]) == str:
+                if not len(self.scene[i][j]) == 1:
                     if len(self.scene[i][j]) < min_entropy:
                         min_entropy_coords = []
                         min_entropy = len(self.scene[i][j])
                         min_entropy_coords.append([i, j])
                     elif len(self.scene[i][j]) == min_entropy:
                         min_entropy_coords.append([i, j])
-        # print('these are the coords', min_entropy_coords)
         if len(min_entropy_coords) > 1:
             min_entropy_coords = [min_entropy_coords[np.random.randint(len(min_entropy_coords))]]
-        # print('found', min_entropy_coords)
-        # print('cell tile possibilities', self.scene[min_entropy_coords[0][0]][min_entropy_coords[0][1]])
 
-        # return self.scene[min_entropy_coords[0][0]][min_entropy_coords[0][1]]
         return min_entropy_coords[0]
 
     def collapse(self, coords):
-        self.scene[coords[0]][coords[1]] = self.scene[coords[0]][coords[1]][np.random.randint(len(self.scene[coords[0]][coords[1]]))]
-        # print('cell tile', self.scene[coords[0]][coords[1]])
+        self.scene[coords[0]][coords[1]] = [self.scene[coords[0]][coords[1]][np.random.randint(len(self.scene[coords[0]][coords[1]]))]]
+        print('cell', coords)
 
     def consequence(self, coords):
         cur_tile = self.scene[coords[0]][coords[1]]
-        # print(cur_tile, 'coords', coords)
         up = coords[0]-1
         down = coords[0]+1
         left = coords[1]-1
         right = coords[1]+1
-        cur_tile_neighbor_data = self.aD.get_assets()[cur_tile]['neighbor_list']
+        cur_tile_neighbor_data = self.aD.get_assets()[cur_tile[0]]['neighbor_list']
         for direction in cur_tile_neighbor_data:
             if direction == 'up':
                 if up < 0:
                     continue
-                elif not type(self.scene[up][coords[1]]) == str:
+                elif not len(self.scene[up][coords[1]]) == 1:
                     new_cell = list(set(self.scene[up][coords[1]]).intersection(cur_tile_neighbor_data[direction]))
                     self.scene[up][coords[1]] = new_cell
+                    if len(new_cell) == 1:
+                        new_coords = [up, coords[1]]
+                        self.consequence(new_coords)
             elif direction == 'down':
                 if down >= self.size[1]:
                     continue
-                elif not type(self.scene[down][coords[1]]) == str:
+                elif not len(self.scene[down][coords[1]]) == 1:    
                     new_cell = list(set(self.scene[down][coords[1]]).intersection(cur_tile_neighbor_data[direction]))
                     self.scene[down][coords[1]] = new_cell
+                    if len(new_cell) == 1:
+                        new_coords = [down, coords[1]]
+                        self.consequence(new_coords)
             elif direction == 'left':
                 if left < 0:
                     continue
-                elif not type(self.scene[coords[0]][left]) == str:
+                elif not len(self.scene[coords[0]][left]) == 1:
                     new_cell = list(set(self.scene[coords[0]][left]).intersection(cur_tile_neighbor_data[direction]))
                     self.scene[coords[0]][left] = new_cell
+                    if len(new_cell) == 1:
+                        new_coords = [coords[0], left]
+                        self.consequence(new_coords)
             elif direction == 'right':
                 if right >= self.size[0]:
                     continue
-                elif not type(self.scene[coords[0]][right]) == str:
+                elif not len(self.scene[coords[0]][right]) == 1:
                     new_cell = list(set(self.scene[coords[0]][right]).intersection(cur_tile_neighbor_data[direction]))
                     self.scene[coords[0]][right] = new_cell
+                    if len(new_cell) == 1:
+                        new_coords = [coords[0], right]
+                        self.consequence(new_coords)
 
                 
 

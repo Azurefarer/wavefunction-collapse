@@ -34,8 +34,8 @@ def main():
         scene = c.get_scene()
         for i in range(size[0]):
             for j in range(size[1]):
-                if type(scene[j][i]) == str:
-                    Win.blit(a.get_SS(), (16*i, 16*j), b.assets[scene[j][i]]['mesh'])
+                if len(scene[j][i]) == 1:
+                    Win.blit(a.get_SS(), (16*i, 16*j), b.assets[scene[j][i][0]]['mesh'])
 
         pg.display.update()
 
