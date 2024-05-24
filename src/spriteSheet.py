@@ -212,6 +212,7 @@ class waveFunction:
         right = coords[1]+1
         cur_tile_neighbor_data = self.aD.get_assets()[cur_tile[0]]['neighbor_list']
         for direction in cur_tile_neighbor_data:
+            
             if direction == 'up':
                 if up < 0:
                     continue
@@ -221,6 +222,7 @@ class waveFunction:
                     if len(new_cell) == 1:
                         new_coords = [up, coords[1]]
                         self.consequence(new_coords)
+
             elif direction == 'down':
                 if down >= self.size[1]:
                     continue
@@ -230,6 +232,7 @@ class waveFunction:
                     if len(new_cell) == 1:
                         new_coords = [down, coords[1]]
                         self.consequence(new_coords)
+
             elif direction == 'left':
                 if left < 0:
                     continue
@@ -239,6 +242,7 @@ class waveFunction:
                     if len(new_cell) == 1:
                         new_coords = [coords[0], left]
                         self.consequence(new_coords)
+
             elif direction == 'right':
                 if right >= self.size[0]:
                     continue
