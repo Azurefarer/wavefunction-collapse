@@ -2,11 +2,9 @@ import pygame as pg
 import numpy as np
 from PIL import Image
 
-
 class spriteSheet:
 
     def  __init__(self, spritesheet):
-
 
         self.spritesheet = pg.image.load(spritesheet).convert()
         self.pillow = Image.open(spritesheet)

@@ -11,14 +11,11 @@ Width, Height = 1800, 1000
 Win = pg.display.set_mode((Width, Height))
 pg.display.set_caption("Sprites")
 
-
 def main():
     run = True
-
     a = spriteSheet('tileAssets.png')
     b = assetData(a)
     c = waveFunction(a, b, [110, 60])
-
     c.start()
 
     ctrl = UIcontroller(a)
